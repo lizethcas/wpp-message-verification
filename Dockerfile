@@ -1,23 +1,26 @@
-# Usamos una imagen de Node que ya incluye herramientas de sistema
-FROM ghcr.io/puppeteer/puppeteer:latest
+FROM node:20-slim
 
-# Cambiamos al usuario root para instalar dependencias si fuera necesario
-USER root
+# Instalar dependencias necesarias para Chromium y el navegador mismo
+RUN apt-get update && apt-get install -y \
+    chromium \
+    fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 \
+    --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
 
 # Directorio de trabajo
 WORKDIR /app
 
-# Copiamos archivos de dependencias
+# Copiar archivos de dependencias e instalar
 COPY package*.json ./
-
-# Instalamos dependencias (incluyendo whatsapp-web.js)
 RUN npm install
 
-# Copiamos el resto del código
+# Copiar el resto del código
 COPY . .
 
-# Exponemos el puerto que usa Express
-EXPOSE 3001
+# Variables de entorno para Puppeteer
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
-# Comando para arrancar la app
+EXPOSE 10000
+
 CMD ["node", "index.js"]
