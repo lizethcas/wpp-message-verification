@@ -10,20 +10,17 @@ app.use(express.json())
 const client = new Client({
   authStrategy: new LocalAuth(),
   puppeteer: {
-    // ESTA LÍNEA ES LA CLAVE PARA RENDER:
-    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/google-chrome-stable',
+    executablePath: '/usr/bin/google-chrome', // Ruta estándar en la imagen de Puppeteer
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
-      '--disable-accelerated-2d-canvas',
-      '--no-first-run',
-      '--no-zygote',
       '--single-process',
-      '--disable-gpu'
+      '--no-zygote'
     ],
   }
-})
+});
+
 
 
 let isReady = false
