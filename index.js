@@ -6,9 +6,12 @@ const app = express()
 app.use(express.json())
 
 // ── Cliente WhatsApp ─────────────────────────────────────
+// ── Cliente WhatsApp ─────────────────────────────────────
 const client = new Client({
   authStrategy: new LocalAuth(),
   puppeteer: {
+    // ESTA LÍNEA ES LA CLAVE PARA RENDER:
+    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/google-chrome-stable',
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
@@ -21,6 +24,7 @@ const client = new Client({
     ],
   }
 })
+
 
 let isReady = false
 
